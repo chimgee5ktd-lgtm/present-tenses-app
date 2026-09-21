@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="mn" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Англи хэлний ЭШ - Present tenses practice</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tone.js for Sound Effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .tab-btn.active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 bg-slate-50 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Header Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- App Title / Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                        <i class="fa-solid fa-graduation-cap text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">Англи хэлний ЭШ - Present tenses practice</h1>
+                        <p class="text-xs text-slate-500 font-medium">12-р анги • ЭЕШ бэлтгэх интерактив систем</p>
+                    </div>
+                </div>
+
+                <!-- Global Lesson Clock / Countdown -->
+                <div class="flex items-center bg-slate-100 rounded-lg p-1.5 px-2.5 sm:px-3 border border-slate-200 space-x-2 sm:space-x-3">
+                    <div class="flex items-center space-x-1.5 sm:space-x-2">
+                        <i class="fa-regular fa-clock text-brand-600 text-xs sm:text-sm"></i>
+                        <span class="hidden sm:inline text-xs font-semibold text-slate-600">Хичээлийн цаг:</span>
+                        <span id="lessonTimerDisplay" class="font-mono text-xs sm:text-sm font-bold text-brand-700">80:00</span>
+                    </div>
+                    <button id="toggleTimerBtn" onclick="toggleLessonTimer()" class="text-[11px] sm:text-xs bg-white text-slate-700 hover:bg-slate-50 px-2 py-1 rounded border border-slate-300 font-medium transition">
+                        <i id="timerIcon" class="fa-solid fa-pause text-xs sm:mr-1"></i> <span class="hidden sm:inline">Түр зогсоох</span>
+                    </button>
+                </div>
+
+                <!-- Utility Action Buttons -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleAudio()" id="audioToggleBtn" title="Аудио эффект асаах/унтраах" class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition">
+                        <i id="audioIcon" class="fa-solid fa-volume-high text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Links (Mobile Scrollable) -->
+            <nav class="flex space-x-4 sm:space-x-8 border-t border-slate-100 text-xs sm:text-sm overflow-x-auto custom-scrollbar no-scrollbar py-1">
+                <button onclick="switchTab('grammar')" id="tab-grammar" class="tab-btn active py-2.5 px-2 border-b-2 border-transparent font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>1. Дүрмийн товчоо</span>
+                </button>
+                <button onclick="switchTab('practice')" id="tab-practice" class="tab-btn py-2.5 px-2 border-b-2 border-transparent font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>2. Интерактив Дасгал</span>
+                </button>
+                <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn py-2.5 px-2 border-b-2 border-transparent font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>3. ЭЕШ Симуляци</span>
+                </button>
+                <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn py-2.5 px-2 border-b-2 border-transparent font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>4. Анализ & Тайлан</span>
+                    <i id="analyticsLockIcon" class="fa-solid fa-lock text-xs text-amber-500 ml-1"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+        <!-- TAB 1: GRAMMAR REVIEW (EXPANDED WITH SIGNAL WORDS & EXAM PITFALLS) -->
+        <section id="view-grammar" class="space-y-6">
+            <div class="bg-gradient-to-r from-brand-600 to-indigo-700 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="space-y-2">
+                    <span class="bg-white/20 text-white text-xs px-2.5 py-1 rounded-full font-semibold uppercase tracking-wide">ЭЕШ Бэлтгэл • 12-р анги</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight">Present Tenses Дүрмийн Товчоо</h2>
+                    <p class="text-xs sm:text-sm text-indigo-100 max-w-2xl">
+                        Одоо цагийн 4 хэлбэрийн байнгын дохио үгс, бүтцийн онцлог болон ЭЕШ сорилуудад хамгийн их тохиолддог захиас, ялгаануудыг дэлгэрэнгүй бэлтгэлээ.
+                    </p>
+                </div>
+                <button onclick="switchTab('practice')" class="whitespace-nowrap bg-white text-brand-700 hover:bg-slate-100 font-bold px-5 py-3 rounded-xl shadow transition text-xs sm:text-sm flex items-center space-x-2 shrink-0">
+                    <span>Дасгал ажиллах</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- 4 DETAILED TENSE CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Present Simple Card -->
+                <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4 hover:border-emerald-400 transition flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-lg text-emerald-700 flex items-center space-x-2">
+                                <i class="fa-solid fa-repeat text-emerald-500"></i>
+                                <span>1. Present Simple</span>
+                            </h3>
+                            <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-md border border-emerald-200">Энгийн Одоо Цаг</span>
+                        </div>
+
+                        <!-- Form / Structure -->
+                        <div class="bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100 text-xs text-emerald-900 font-mono">
+                            <strong>Бүтэц:</strong> Subject + V1 / V(-s/-es)<br>
+                            <span class="text-[11px] text-emerald-700">He/She/It $\rightarrow$ V-s | Negative/Question $\rightarrow$ do/does</span>
+                        </div>
+
+                        <!-- Core Uses -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1">Үндсэн хэрэглээ:</h4>
+                            <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside leading-relaxed">
+                                <li><strong>Дадал үйлдэл (Habits & Routines):</strong> <em>He plays basketball every weekend.</em></li>
+                                <li><strong>Байгалийн хууль / Ерөнхий үнэн:</strong> <em>Water boils at 100°C. The sun sets in the west.</em></li>
+                                <li><strong>Албан ёсны цагийн хуваарь (Timetables):</strong> <em>The train arrives at 10 pm. The plane leaves at 8 tomorrow.</em></li>
+                                <li><strong>Спортын тайлбар & Зохиолын тойм:</strong> <em>The striker passes the ball and scores!</em></li>
+                            </ul>
+                        </div>
+
+                        <!-- Signal Words -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1.5">🔑 Дохио үгс (Signal Words):</h4>
+                            <div class="flex flex-wrap gap-1.5 text-xs">
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">always</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">usually</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">often</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">sometimes</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">seldom</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">rarely</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">never</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">every day / week / year</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">on Mondays</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">once a week</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Trap Note -->
+                    <div class="bg-amber-50 rounded-xl p-3 border border-amber-200 text-xs text-amber-900 space-y-1">
+                        <span class="font-bold text-amber-800 flex items-center space-x-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>ЭЕШ-ийн Хавх & Анхаарах зүйл:</span>
+                        </span>
+                        <p class="leading-relaxed">
+                            Цагийн хуваарьтай ирээдүйн үйлдэл (<em>"tomorrow", "next Monday"</em> гэж байсан ч кино, нислэгийн цаг бол Present Simple ашиглана) болон <strong>Stative verbs</strong> (think, know, want) дээр үргэлжлэх цаг биш Present Simple хэрэглэнэ!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Present Continuous Card -->
+                <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4 hover:border-sky-400 transition flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-lg text-sky-700 flex items-center space-x-2">
+                                <i class="fa-solid fa-spinner text-sky-500"></i>
+                                <span>2. Present Continuous</span>
+                            </h3>
+                            <span class="text-xs bg-sky-50 text-sky-700 font-semibold px-2.5 py-1 rounded-md border border-sky-200">Үргэлжилж Буй Одоо Цаг</span>
+                        </div>
+
+                        <!-- Form / Structure -->
+                        <div class="bg-sky-50/50 p-2.5 rounded-xl border border-sky-100 text-xs text-sky-900 font-mono">
+                            <strong>Бүтэц:</strong> Subject + am / is / are + V-ing<br>
+                            <span class="text-[11px] text-sky-700">Negative: am/is/are + not + V-ing | Question: Am/Is/Are + S + V-ing?</span>
+                        </div>
+
+                        <!-- Core Uses -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1">Үндсэн хэрэглээ:</h4>
+                            <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside leading-relaxed">
+                                <li><strong>Яг одоо болж буй үйлдэл:</strong> <em>I am writing an exam right now.</em></li>
+                                <li><strong>Түр зуурын байдал (Temporary state):</strong> <em>He is living with his brother these days.</em></li>
+                                <li><strong>Өөрчлөгдөн хөгжиж буй үзэгдэл:</strong> <em>English online courses are becoming popular.</em></li>
+                                <li><strong>Ойрын ирээдүйд товлосон хувийн төлөвлөгөө:</strong> <em>I am meeting my doctor tomorrow.</em></li>
+                            </ul>
+                        </div>
+
+                        <!-- Signal Words -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1.5">🔑 Дохио үгс (Signal Words):</h4>
+                            <div class="flex flex-wrap gap-1.5 text-xs">
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">now</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">right now</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">at the moment</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">currently</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">these days</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">nowadays</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">Look!</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">Listen!</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">Shh!</span>
+                                <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-semibold">Be quiet!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Trap Note -->
+                    <div class="bg-amber-50 rounded-xl p-3 border border-amber-200 text-xs text-amber-900 space-y-1">
+                        <span class="font-bold text-amber-800 flex items-center space-x-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>ЭЕШ-ийн Хавх & Анхаарах зүйл:</span>
+                        </span>
+                        <p class="leading-relaxed">
+                            Өгүүлбэрийн эхэнд <em>Look! Listen! Shh! Please be quiet!</em> гэсэн дуудлага ирвэл яг одоо болж буй тул шууд Present Continuous сонгоно.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Present Perfect Card -->
+                <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4 hover:border-amber-400 transition flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-lg text-amber-700 flex items-center space-x-2">
+                                <i class="fa-solid fa-circle-check text-amber-500"></i>
+                                <span>3. Present Perfect</span>
+                            </h3>
+                            <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2.5 py-1 rounded-md border border-amber-200">Одоо Төгссөн Цаг</span>
+                        </div>
+
+                        <!-- Form / Structure -->
+                        <div class="bg-amber-50/50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-900 font-mono">
+                            <strong>Бүтэц:</strong> Subject + have / has + V3 (Past Participle)<br>
+                            <span class="text-[11px] text-amber-700">He/She/It $\rightarrow$ has + V3 | I/You/We/They $\rightarrow$ have + V3</span>
+                        </div>
+
+                        <!-- Core Uses -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1">Үндсэн хэрэглээ:</h4>
+                            <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside leading-relaxed">
+                                <li><strong>Амьдралын туршлага (Life experience):</strong> <em>I have visited Japan twice in my life.</em></li>
+                                <li><strong>Саяхан дууссан & Одоо харагдаж буй үр дүн:</strong> <em>I have lost my key (so I can't open the door).</em></li>
+                                <li><strong>Хийж гүйцэтгэсэн тоо хэмжээ:</strong> <em>We have done ten exercises today.</em></li>
+                            </ul>
+                        </div>
+
+                        <!-- Signal Words -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1.5">🔑 Дохио үгс (Signal Words):</h4>
+                            <div class="flex flex-wrap gap-1.5 text-xs">
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">already</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">yet</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">just</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">ever</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">never</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">recently</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">lately</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">so far</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">up to now</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">for</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">since</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">this week</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Trap Note -->
+                    <div class="bg-amber-50 rounded-xl p-3 border border-amber-200 text-xs text-amber-900 space-y-1">
+                        <span class="font-bold text-amber-800 flex items-center space-x-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>ЭЕШ-ийн Хавх & Анхаарах зүйл:</span>
+                        </span>
+                        <p class="leading-relaxed">
+                            Яг өнгөрсөн тодорхой цаг заасан үгс (<em>yesterday, last year, in 2020, 2 days ago</em>) байвал <strong>Past Simple (V2)</strong> авна. Цаг заагаагүй, зөвхөн үр дүн чухал бол <strong>Present Perfect</strong> авна!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Present Perfect Continuous Card -->
+                <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4 hover:border-purple-400 transition flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-lg text-purple-700 flex items-center space-x-2">
+                                <i class="fa-solid fa-hourglass-half text-purple-500"></i>
+                                <span>4. Present Perfect Continuous</span>
+                            </h3>
+                            <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-md border border-purple-200">Одоо Төгс Үргэлжлэх Цаг</span>
+                        </div>
+
+                        <!-- Form / Structure -->
+                        <div class="bg-purple-50/50 p-2.5 rounded-xl border border-purple-100 text-xs text-purple-900 font-mono">
+                            <strong>Бүтэц:</strong> Subject + have / has + been + V-ing<br>
+                            <span class="text-[11px] text-purple-700">He/She/It $\rightarrow$ has been V-ing | I/You/We/They $\rightarrow$ have been V-ing</span>
+                        </div>
+
+                        <!-- Core Uses -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1">Үндсэн хэрэглээ:</h4>
+                            <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside leading-relaxed">
+                                <li><strong>Өнгөрсөнд эхлээд одоо хүртэл үргэлжилж буй:</strong> <em>I have been waiting for two hours.</em></li>
+                                <li><strong>Урт хугацааны тасралтгүй процессын одоогийн шинж тэмдэг:</strong> <em>She is tired because she has been cleaning all morning.</em></li>
+                            </ul>
+                        </div>
+
+                        <!-- Signal Words -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1.5">🔑 Дохио үгс (Signal Words):</h4>
+                            <div class="flex flex-wrap gap-1.5 text-xs">
+                                <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold">for (for 2 hours)</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold">since (since 8 o'clock)</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold">how long...?</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold">all day</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold">all morning / week</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Trap Note -->
+                    <div class="bg-amber-50 rounded-xl p-3 border border-amber-200 text-xs text-amber-900 space-y-1">
+                        <span class="font-bold text-amber-800 flex items-center space-x-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>ЭЕШ-ийн Хавх & Анхаарах зүйл:</span>
+                        </span>
+                        <p class="leading-relaxed">
+                            Stative verbs (<em>know, have, be, believe</em>) нь <em>since/for</em>-той байсан ч <strong>хэзээ ч -ing залгахгүй</strong> тул Present Perfect (<em>have known</em>) хэлбэрээр бичигдэнэ!
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- KEY EXAM COMPARISONS & TRAPS SECTION -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
+                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>ЭЕШ-д Ирдэг ТОП 4 Харьцуулалт ба Хавх (Exam Traps)</span>
+                        </h3>
+                        <p class="text-xs text-slate-500">Тестийн асуулт дээр сурагчидын хамгийн их алддаг нарийн ялгаанууд</p>
+                    </div>
+                    <span class="hidden sm:inline-block text-xs bg-rose-50 text-rose-700 font-bold px-3 py-1 rounded-full border border-rose-200">ЭЕШ 2024-2026 Фокус</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+
+                    <!-- Trap 1 -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center text-xs">1</span>
+                            <h4 class="font-bold text-slate-800">Stative Verbs (Төлөв заасан үйл үгс)</h4>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">
+                            Мэдрэмж, бодол, эзэмшил заасан үйл үгс (<em>think, know, want, possess, feel, have, understand, remember</em>) нь одоо үргэлжилж байсан ч <strong>-ing авдаггүй</strong>.
+                        </p>
+                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-xs space-y-1">
+                            <p class="text-rose-600">❌ I am knowing him very well.</p>
+                            <p class="text-emerald-700 font-bold">Concept: I know him very well. (Present Simple)</p>
+                            <p class="text-amber-700 mt-1">💡 <em>ЭЕШ Анхааруулга:</em> "Think" санал бодол хэлэхэд Simple (I think you're right), харин тархиндаа эргэцүүлэн бодох процессийг заавал Continuous (I am thinking about buying a car) болдог!</p>
+                        </div>
+                    </div>
+
+                    <!-- Trap 2 -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center text-xs">2</span>
+                            <h4 class="font-bold text-slate-800">Present Perfect vs Past Simple (Цагийн дохио)</h4>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">
+                            Өнгөрсөн цаг заасан үг <strong>байгаа ба байхгүй</strong> тохиолдлын ялгаа:
+                        </p>
+                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-xs space-y-1">
+                            <p class="text-slate-700">I <strong>lost</strong> my key <u>yesterday</u>. (Past Simple - тодорхой цагтай)</p>
+                            <p class="text-emerald-700 font-bold">I <strong>have lost</strong> my key. (Present Perfect - одоо түлхүүргүй байна, үр дүн)</p>
+                            <p class="text-slate-700">Shakespeare <strong>wrote</strong> 37 plays. (Нас барсан тул Past Simple)</p>
+                            <p class="text-emerald-700 font-bold">J.K. Rowling <strong>has written</strong> many books. (Амьд, үргэлжилж байна)</p>
+                        </div>
+                    </div>
+
+                    <!-- Trap 3 -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center text-xs">3</span>
+                            <h4 class="font-bold text-slate-800">Present Perfect vs Perfect Continuous</h4>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">
+                            <strong>How many? (Үр дүн, тоо)</strong> vs <strong>How long? (Үргэлжилсэн хугацаа)</strong>
+                        </p>
+                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-xs space-y-1">
+                            <p class="text-slate-700">I <strong>have written 3 letters</strong> today. (Үр дүн/Тоо хэмжээ $\rightarrow$ Present Perfect)</p>
+                            <p class="text-purple-700 font-bold">I <strong>have been writing letters all morning</strong>. (Үйл явцын урт хугацаа $\rightarrow$ Perfect Continuous)</p>
+                        </div>
+                    </div>
+
+                    <!-- Trap 4 -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center text-xs">4</span>
+                            <h4 class="font-bold text-slate-800">Have been to vs Have gone to & Since vs For</h4>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">
+                            Байршил ба Хугацааны эхлэл/үргэлжлэлийн ялгаа:
+                        </p>
+                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-xs space-y-1">
+                            <p class="text-slate-700">He <strong>has been to</strong> London. (Яваад буцаад ирсэн - Туршлага)</p>
+                            <p class="text-slate-700">He <strong>has gone to</strong> London. (Тийшээ явчихсан, одоо тэнд байгаа)</p>
+                            <p class="text-emerald-700 font-bold">SINCE + Эхэлсэн цэг (2018, yesterday, 8:00, I was young)</p>
+                            <p class="text-emerald-700 font-bold">FOR + Үргэлжилсэн хугацаа (2 hours, 5 years, a long time)</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: INTERACTIVE PRACTICE -->
+        <section id="view-practice" class="hidden space-y-6 max-w-3xl mx-auto">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div class="flex items-center space-x-2">
+                        <span id="practiceQIndex" class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg">#1</span>
+                        <span id="practiceTenseBadge" class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">Present Simple</span>
+                    </div>
+                    <span id="practiceProgressText" class="text-xs font-bold text-slate-500">Асуулт 1 / 30</span>
+                </div>
+
+                <div class="space-y-3">
+                    <p id="practiceQuestionText" class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
+                        Question loading...
+                    </p>
+                    <div id="practiceOptionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                        <!-- Options generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Interactive Explanation Box -->
+                <div id="practiceExplanationBox" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1.5 transition">
+                    <h4 id="explanationTitle" class="font-bold text-sm text-slate-800">Дүрмийн санамж:</h4>
+                    <p id="explanationText" class="text-xs sm:text-sm text-slate-600 leading-relaxed"></p>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <button onclick="resetPractice()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Дахин эхлэх
+                    </button>
+                    <button onclick="nextPracticeQuestion()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md transition flex items-center space-x-2">
+                        <span>Дараагийн асуулт</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: EXAM SIMULATION -->
+        <section id="view-exam" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">ЭЕШ Present Tenses Симуляци Тест</h2>
+                        <p class="text-xs text-slate-500">Бүх асуултад хариулж дуусаад 'Шалгалт дуусгах' товчийг дарна уу.</p>
+                    </div>
+                    <button onclick="submitExam()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow transition shrink-0">
+                        <i class="fa-solid fa-check-double mr-1.5"></i> Шалгалт дуусгах
+                    </button>
+                </div>
+
+                <!-- Student Name Input for Google Sheets -->
+                <div class="bg-brand-50/60 p-3.5 rounded-xl border border-brand-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-id-card text-brand-600"></i>
+                        <label for="studentNameInput" class="text-xs font-bold text-brand-900 whitespace-nowrap">Сурагчийн нэр, анги:</label>
+                    </div>
+                    <input type="text" id="studentNameInput" placeholder="Жишээ: Б. Болд (12А)" 
+                           class="w-full sm:w-72 px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none bg-white">
+                </div>
+            </div>
+
+            <div id="examQuestionsContainer" class="space-y-4">
+                <!-- Exam cards injected dynamically -->
+            </div>
+
+            <div class="flex justify-center pt-4">
+                <button onclick="submitExam()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-8 py-3 rounded-xl shadow-lg transition">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Шалгалт Дуусгах & Анализ Харах
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 4: ANALYTICS & REVIEW WITH TEACHER PIN & GOOGLE SHEETS INTEGRATION -->
+        <section id="view-analytics" class="hidden space-y-6">
+            
+            <!-- PIN CODE LOCK SCREEN (Displayed when locked) -->
+            <div id="analyticsLockScreen" class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm text-center max-w-lg mx-auto my-12 space-y-5">
+                <div class="w-16 h-16 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Багшийн нэвтрэх хэсэг</h3>
+                    <p class="text-xs text-slate-500 mt-1">Хичээлийн дараах анализ болон хэлэлцүүлгийг эхлүүлэхийн тулд багшийн PIN кодоо оруулна уу.</p>
+                </div>
+                
+                <div class="space-y-3 pt-2">
+                    <div class="relative max-w-xs mx-auto">
+                        <input type="password" id="teacherPinInput" maxlength="6" placeholder="PIN код (Анхны код: 1234)" 
+                               onkeydown="if(event.key==='Enter') unlockAnalytics()"
+                               class="w-full text-center tracking-widest text-lg font-bold py-3 px-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none">
+                    </div>
+                    <p id="pinErrorText" class="text-xs text-rose-600 font-semibold hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Буруу PIN код байна!</p>
+                    <button onclick="unlockAnalytics()" class="w-full max-w-xs bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm py-3 rounded-xl shadow-md transition">
+                        <i class="fa-solid fa-key mr-1.5"></i> Тайлан нээх & Хэлэлцүүлэг эхлэх
+                    </button>
+                </div>
+                <p class="text-[11px] text-slate-400">💡 Анхны PIN код: <span class="font-mono font-bold text-slate-600">1234</span></p>
+            </div>
+
+            <!-- UNLOCKED CONTENT CONTAINER -->
+            <div id="analyticsContent" class="hidden space-y-6">
+                <div class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-emerald-500/20 text-emerald-400 p-2.5 rounded-xl border border-emerald-500/30">
+                            <i class="fa-solid fa-chalkboard-user text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Багшийн горим идэвхтэй</span>
+                            <h3 class="text-base font-bold leading-tight">Ангийн Нэгдсэн Анализ & Google Sheet Интеграци</h3>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openGoogleSheetSettings()" class="text-xs bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-600 px-3 py-2 rounded-lg font-medium transition flex items-center space-x-1">
+                            <i class="fa-solid fa-file-excel"></i>
+                            <span>Google Sheet Холбох</span>
+                        </button>
+                        <button onclick="openChangePinModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-lg font-medium transition">
+                            <i class="fa-solid fa-key text-amber-400 mr-1"></i> PIN Солих
+                        </button>
+                        <button onclick="lockAnalytics()" class="text-xs bg-rose-600/80 hover:bg-rose-600 text-white px-3 py-2 rounded-lg font-medium transition">
+                            <i class="fa-solid fa-lock mr-1"></i> Түгжих
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 gap-3">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Шалгалтын Үр Дүн ба Анализ</h2>
+                            <p class="text-xs sm:text-sm text-slate-500">Сурагчийн давуу ба сул тал, цаг тус бүрээрх гүйцэтгэлийн хувь</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="sendResultToGoogleSheet()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3.5 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Google Sheet-рүү Илгээх</span>
+                            </button>
+                            <button onclick="exportToGoogleSheetCSV()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-lg border border-slate-200 transition flex items-center space-x-1.5">
+                                <i class="fa-solid fa-file-csv text-emerald-600"></i>
+                                <span>Google Sheet (CSV) Татах</span>
+                            </button>
+                            <button onclick="exportResultReport()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-lg border border-slate-200 transition flex items-center space-x-1.5">
+                                <i class="fa-solid fa-print text-brand-600"></i>
+                                <span>Хэвлэх</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Status banner for Google Sheet sending -->
+                    <div id="googleSheetStatusMsg" class="hidden my-4 p-3 rounded-xl text-xs font-semibold flex items-center space-x-2"></div>
+
+                    <!-- Stats Overview Badges -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                            <span class="text-xs text-slate-500 font-semibold uppercase">Нийт асуулт</span>
+                            <p id="statTotal" class="text-2xl font-extrabold text-slate-800 mt-1">30</p>
+                        </div>
+                        <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center">
+                            <span class="text-xs text-emerald-600 font-semibold uppercase">Зөв хариулсан</span>
+                            <p id="statCorrect" class="text-2xl font-extrabold text-emerald-700 mt-1">0</p>
+                        </div>
+                        <div class="bg-rose-50 p-4 rounded-xl border border-rose-100 text-center">
+                            <span class="text-xs text-rose-600 font-semibold uppercase">Алдаатай</span>
+                            <p id="statWrong" class="text-2xl font-extrabold text-rose-700 mt-1">0</p>
+                        </div>
+                        <div class="bg-brand-50 p-4 rounded-xl border border-brand-100 text-center">
+                            <span class="text-xs text-brand-600 font-semibold uppercase">Амжилтын хувь</span>
+                            <p id="statScorePct" class="text-2xl font-extrabold text-brand-700 mt-1">0%</p>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown by Tenses -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm">Цаг тус бүрийн ойлголтын түвшин:</h3>
+                        
+                        <!-- Present Simple Progress -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-emerald-700">Present Simple</span>
+                                <span id="score-simple-text" class="text-slate-600">0 / 0</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div id="bar-simple" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Present Continuous Progress -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-sky-700">Present Continuous</span>
+                                <span id="score-continuous-text" class="text-slate-600">0 / 0</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div id="bar-continuous" class="bg-sky-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Present Perfect Progress -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-amber-700">Present Perfect</span>
+                                <span id="score-perfect-text" class="text-slate-600">0 / 0</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div id="bar-perfect" class="bg-amber-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Present Perfect Continuous Progress -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-purple-700">Present Perfect Continuous</span>
+                                <span id="score-perfcont-text" class="text-slate-600">0 / 0</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div id="bar-perfcont" class="bg-purple-500 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLASS DISCUSSION BOARD SECTION -->
+                <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-6 shadow-lg space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-indigo-800/80 pb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-white">Хичээлийн дараах Багш-Сурагчийн Хэлэлцүүлэг</h3>
+                                <p class="text-xs text-indigo-200">Самбар дээр томоор харуулж, сурагчид яагаад алдсаныг цугтаа ярилцах хэсэг</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prompt Box for Discussion -->
+                    <div class="bg-indigo-950/60 rounded-xl p-4 border border-indigo-800/50 space-y-2">
+                        <h4 class="text-xs font-bold uppercase text-amber-400 tracking-wider">💬 Багшид зориулсан хэлэлцүүлгийн чиглүүлэг:</h4>
+                        <ul class="text-xs text-indigo-100 space-y-1.5 list-disc list-inside">
+                            <li>Сурагчдаас <strong>Stative Verbs</strong> (think, know, have) дээр яагаад Continuous цаг хэрэглэж болохгүйг асууж ярилцах.</li>
+                            <li><strong>Present Perfect</strong> болон <strong>Present Perfect Continuous</strong> цагийн "үр дүн" ба "үргэлжлэх хугацаа"-ны ялгааг жишээн дээр тайлбарлах.</li>
+                            <li>Дараах алдаатай асуултуудыг нэг бүрчлэн самбарт хэлэлцэж, зөв хариултын шалтгааныг сурагчдаар хэлүүлнэ үү.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Detailed Missed Questions Review -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 text-base">Алдааны дэлгэрэнгүй тойм & Хэлэлцэх асуултууд</h3>
+                    <div id="mistakesReviewList" class="space-y-3">
+                        <p class="text-slate-400 text-xs italic">Та эхлээд ЭЕШ Симуляци шалгалт өгснөөр энд алдсан асуултууд тань тайлбартайгаа харагдана.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GOOGLE SHEET CONFIGURATION MODAL -->
+        <div id="googleSheetModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-slate-100">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-file-csv text-emerald-600 mr-2"></i>Google Sheet Холбох (Google Apps Script Webhook)</h3>
+                    <button onclick="closeGoogleSheetSettings()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div class="space-y-3 text-xs text-slate-600">
+                    <p class="leading-relaxed">
+                        Сурагчдын дүнг Google Sheet рүү автоматаар хадгалахын тулд Google Sheet дээрээ Google Apps Script (Web App URL) үүсгэн энд оруулаарай.
+                    </p>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Google Apps Script Web App URL:</label>
+                        <input type="url" id="googleScriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" 
+                               class="w-full text-xs font-mono py-2.5 px-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1 text-[11px] font-mono">
+                        <p class="font-bold text-slate-700">💡 Google Apps Script Код (Google Sheet дээрээ хуулж тавих):</p>
+                        <textarea readonly class="w-full h-24 p-2 bg-slate-900 text-emerald-400 rounded custom-scrollbar text-[10px] leading-normal" onclick="this.select()">
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    new Date(),
+    data.studentName || "Зочин",
+    data.scorePct + "%",
+    data.correctCount + "/" + data.total,
+    data.simple,
+    data.continuous,
+    data.perfect,
+    data.perfcont
+  ]);
+  return ContentService.createTextOutput("Success");
+}</textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button onclick="closeGoogleSheetSettings()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg">Цуцлах</button>
+                    <button onclick="saveGoogleScriptUrl()" class="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow">Хадгалах</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PIN CHANGE MODAL -->
+        <div id="changePinModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-100">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-key text-amber-500 mr-2"></i>Багшийн PIN код солих</h3>
+                    <button onclick="closeChangePinModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Одоогийн PIN код:</label>
+                        <input type="password" id="oldPinInput" maxlength="6" class="w-full text-center text-base font-bold py-2 px-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Шинэ PIN код:</label>
+                        <input type="password" id="newPinInput" maxlength="6" class="w-full text-center text-base font-bold py-2 px-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button onclick="closeChangePinModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg">Цуцлах</button>
+                    <button onclick="saveNewTeacherPin()" class="px-4 py-2 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow">Хадгалах</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const DEFAULT_QUESTIONS = [
+            {
+                id: 1,
+                question: "Water ________ at 100 degrees Celsius under normal atmospheric pressure.",
+                correctAnswer: "boils",
+                options: ["boils", "is boiling", "has boiled", "has been boiling"],
+                tense: "Present Simple",
+                explanation: "Байгалийн хууль болон ерөнхий үнэн зүйлийг (General truth / Law of nature) илэрхийлэхэд Present Simple цаг хэрэглэнэ."
+            },
+            {
+                id: 2,
+                question: "Please be quiet. I ________ to focus on my online English exam right now.",
+                correctAnswer: "am trying",
+                options: ["try", "am trying", "have tried", "have been trying"],
+                tense: "Present Continuous",
+                explanation: "'Please be quiet' болон 'right now' гэсэн дохио үгс нь яг одоо явагдаж буй үйлдлийг заана."
+            },
+            {
+                id: 3,
+                question: "- “What ________ about the new simplified tax law?”\n- “It’s more confusing than the old one.”",
+                correctAnswer: "do you think",
+                options: ["are you thinking", "do you think", "have you thought", "have you been thinking", "your thought"],
+                tense: "Present Simple",
+                explanation: "'Think' үйл үг нь санал бодол асуух утгаар (State verb) ороход үргэлжлэх цаг дээр ашиглагддаггүй тул Present Simple хэрэглэнэ."
+            },
+            {
+                id: 4,
+                question: "Mr. Tuvshin ________ trouble with his car, so he has to take the bus to work these days.",
+                correctAnswer: "is having",
+                options: ["having", "had had", "to have", "is having", "was having"],
+                tense: "Present Continuous",
+                explanation: "'these days' (энэ өдрүүдэд) болон түр зуурын бэрхшээл тулгарч байгааг (Temporary status) Present Continuous-ээр заана."
+            },
+            {
+                id: 5,
+                question: "A: How often ________ Dorj ________ basketball?\nB: Seldom.",
+                correctAnswer: "does, play",
+                options: ["do, plays", "do, play", "is, playing", "does, play", "are, playing"],
+                tense: "Present Simple",
+                explanation: "Давтамж асуух 'How often' асуултад 3-р биеийн ганц тоонд (Dorj) 'does + V1' хэлбэрийг ашиглана."
+            },
+            {
+                id: 6,
+                question: "Autumn usually ________ quite early in our country.",
+                correctAnswer: "starts",
+                options: ["start", "has started", "starts", "is starting", "starting"],
+                tense: "Present Simple",
+                explanation: "'usually' (ихэвчлэн) болон жил бүр давтагддаг байгалийн цаг уурын дадал үйлдлийг Present Simple заана."
+            },
+            {
+                id: 7,
+                question: "- “Hurry up! We are waiting for you. What’s taking you so long?”\n- “I ________ for an important phone call. Go ahead and leave without me.”",
+                correctAnswer: "am waiting",
+                options: ["wait", "will wait", "am waiting", "have waited", "waited"],
+                tense: "Present Continuous",
+                explanation: "Яг одоо яриа өрнөж байхад хүлээж байгаа (Action happening right now) тул Present Continuous."
+            },
+            {
+                id: 8,
+                question: "George, could you please turn off the stoves? The potatoes ________ for at least thirty minutes.",
+                correctAnswer: "have been boiling",
+                options: ["are boiling", "boiling", "have been boiling", "were boiling"],
+                tense: "Present Perfect Continuous",
+                explanation: "'for at least thirty minutes' буюу өнгөрснөөс эхлээд одоо хүртэл 30 минутын турш тасралтгүй буцалж байгааг заана."
+            },
+            {
+                id: 9,
+                question: "A: How long ________ Carol?\nB: Since we were small.",
+                correctAnswer: "have you known",
+                options: ["did you know", "are you knowing", "have you been knowing", "have you known"],
+                tense: "Present Perfect",
+                explanation: "'Know' нь төлөв заасан үйл үг (Stative verb) тул 'since' байсан ч '-ing' залгахгүй, Present Perfect (have known) авна."
+            },
+            {
+                id: 10,
+                question: "I ________ to many students during my teaching career.",
+                correctAnswer: "have taught",
+                options: ["teach", "am teaching", "have taught", "have been teaching"],
+                tense: "Present Perfect",
+                explanation: "Амьдрал ба ажлын замнал дахь цуглуулсан туршлагыг Present Perfect цагаар илэрхийлнэ."
+            },
+            {
+                id: 11,
+                question: "Look! There is a man sitting at the first table near the door. He ________ at us.",
+                correctAnswer: "is looking",
+                options: ["looks", "looked", "has looked", "is looking"],
+                tense: "Present Continuous",
+                explanation: "'Look!' анхааруулга үг нь одоо нүдний өмнө болж буй үйл явдлыг заадаг."
+            },
+            {
+                id: 12,
+                question: "Don’t enter the classroom. The students ________ an exam.",
+                correctAnswer: "are writing",
+                options: ["write", "were writing", "have written", "are writing"],
+                tense: "Present Continuous",
+                explanation: "'Don't enter' (Бүү ор) нь одоо шалгалт явагдаж байгааг харуулна."
+            },
+            {
+                id: 13,
+                question: "Shh! The teacher ________ on the blackboard.",
+                correctAnswer: "is writing",
+                options: ["wrote", "was writing", "writes", "will write", "is writing"],
+                tense: "Present Continuous",
+                explanation: "'Shh!' чимээгүй байхыг шаардсан сануулга нь одоо болж буй үйлдлийг заана."
+            },
+            {
+                id: 14,
+                question: "I’m taking my sister out as she ________ any sun for a long time.",
+                correctAnswer: "hasn’t had",
+                options: ["hasn’t had", "haven’t had", "hadn’t been", "will have"],
+                tense: "Present Perfect",
+                explanation: "'for a long time' (удаан хугацааны турш) ба одоогийн нөхцөлтэй холбоотой тул Present Perfect."
+            },
+            {
+                id: 15,
+                question: "He ________ ill for three months already.",
+                correctAnswer: "has been",
+                options: ["was", "has been", "is", "have been"],
+                tense: "Present Perfect",
+                explanation: "'for three months already' (хэдийн 3 сарын турш) нь одоо ч өвчтэй байгааг заах Present Perfect."
+            },
+            {
+                id: 16,
+                question: "She ________ Japan three times in her life.",
+                correctAnswer: "has visited",
+                options: ["visits", "is visiting", "has visited", "has been visiting"],
+                tense: "Present Perfect",
+                explanation: "Амьдралын туршлагыг (Life experience) Present Perfect цагаар илэрхийлнэ."
+            },
+            {
+                id: 17,
+                question: "The flight to Tokyo ________ at 8:00 AM tomorrow morning.",
+                correctAnswer: "leaves",
+                options: ["leaves", "is leaving", "has left", "has been leaving"],
+                tense: "Present Simple",
+                explanation: "Нислэг болон тээврийн хэрэгслийн албан ёсны цагийн хуваарийг (Timetable) Present Simple-ээр заана."
+            },
+            {
+                id: 18,
+                question: "He usually lives in Darkhan, but he ________ with his brother in Ulaanbaatar these days.",
+                correctAnswer: "is staying",
+                options: ["stays", "is staying", "has stayed", "has been staying"],
+                tense: "Present Continuous",
+                explanation: "'these days' болон түр зуур амьдарч байгаа тохиолдолд Present Continuous тохиромжтой."
+            },
+            {
+                id: 19,
+                question: "I can't open the door because I ________ my house keys.",
+                correctAnswer: "have lost",
+                options: ["lose", "am losing", "have lost", "have been losing"],
+                tense: "Present Perfect",
+                explanation: "Өнгөрсөнд болсон үйлдлийн одоо харагдаж буй үр дүн (Lost key -> can't open door)."
+            },
+            {
+                id: 20,
+                question: "They ________ in this software company since 2018.",
+                correctAnswer: "have been working",
+                options: ["work", "are working", "have been working", "have worked"],
+                tense: "Present Perfect Continuous",
+                explanation: "'since 2018' буюу өнгөрснөөс одоог хүртэл тасралтгүй үргэлжилж буй үйлдэл."
+            },
+            {
+                id: 21,
+                question: "A: Did you enjoy your birthday party?\nB: Oh, yes. It was ________ birthday party I’ve ever had.",
+                correctAnswer: "the best",
+                options: ["the best", "better", "good", "more good"],
+                tense: "Present Perfect",
+                explanation: "'I've ever had' (миний түүхэнд авалцаж байсан) бүтээц нь хамгийн сайн давтамж заах Давуу зэрэг (The best) шаарддаг."
+            },
+            {
+                id: 22,
+                question: "A: Would you like to go to the party?\nB: No, really. I’m exhausted. I ________ hard all day.",
+                correctAnswer: "have been working",
+                options: ["had worked", "am working", "worked", "have been working"],
+                tense: "Present Perfect Continuous",
+                explanation: "'all day' турш ажилласан үйлдлийн шинж тэмдэг одоо ядарсан (exhausted) байдлаар харагдаж байна."
+            },
+            {
+                id: 23,
+                question: "We ________ ten exercises for our English class today.",
+                correctAnswer: "have done",
+                options: ["do", "are doing", "have done", "have been doing"],
+                tense: "Present Perfect",
+                explanation: "Хийж гүйцэтгэсэн дасгалын тоо хэмжээ ба үр дүнг зааж байвал Present Perfect."
+            },
+            {
+                id: 24,
+                question: "She is exhausted because she ________ all morning.",
+                correctAnswer: "has been cleaning",
+                options: ["cleans", "is cleaning", "has cleaned", "has been cleaning"],
+                tense: "Present Perfect Continuous",
+                explanation: "Өглөөнөөс хойш үргэлжилсэн цэвэрлэгээний үр дүнд одоо ядарсан байна."
+            },
+            {
+                id: 25,
+                question: "Listen! Someone ________ at the entrance door.",
+                correctAnswer: "is knocking",
+                options: ["knocks", "is knocking", "has knocked", "has been knocking"],
+                tense: "Present Continuous",
+                explanation: "'Listen!' сануулга нь одоо болж буй үйлдлийг сануулдаг."
+            },
+            {
+                id: 26,
+                question: "The sun ________ in the west every evening.",
+                correctAnswer: "sets",
+                options: ["sets", "is setting", "has set", "has been setting"],
+                tense: "Present Simple",
+                explanation: "Байгалийн тогтмол жам ёсны үнэн зүйлийг Present Simple заана."
+            },
+            {
+                id: 27,
+                question: "He always ________ basketball every weekend with his classmates.",
+                correctAnswer: "plays",
+                options: ["plays", "is playing", "has played", "has been playing"],
+                tense: "Present Simple",
+                explanation: "'always' болон 'every weekend' дадал заасан үгстэй Present Simple тохирно."
+            },
+            {
+                id: 28,
+                question: "I ________ a cup of coffee, so I feel completely refreshed now.",
+                correctAnswer: "have just drunk",
+                options: ["drink", "am drinking", "have just drunk", "have been drinking"],
+                tense: "Present Perfect",
+                explanation: "'just' саяхан дууссан ба одоо сэргэг байгаа үр дүнг харуулна."
+            },
+            {
+                id: 29,
+                question: "I am continuously reading. I ________ this book since 12 o'clock.",
+                correctAnswer: "have been reading",
+                options: ["read", "am reading", "have read", "have been reading"],
+                tense: "Present Perfect Continuous",
+                explanation: "12 цагаас хойш тасралтгүй уншиж буй одоо ч үргэлжилж буй үйлдэл."
+            },
+            {
+                id: 30,
+                question: "The plane ________ at 5 tomorrow afternoon according to the timetable.",
+                correctAnswer: "leaves",
+                options: ["leaves", "is leaving", "has left", "has been leaving"],
+                tense: "Present Simple",
+                explanation: "Албан ёсны цагийн хуваарийн дагуу товлогдсон ирээдүйг Present Simple ашиглана."
+            }
+        ];
+
+        let currentQuestions = [...DEFAULT_QUESTIONS];
+        let currentPracticeIndex = 0;
+        let practiceAnswers = {};
+        let examUserAnswers = {};
+        let lessonSecondsLeft = 80 * 60; // 80 minutes
+        let lessonTimerInterval = null;
+        let isTimerRunning = true;
+        let soundEnabled = true;
+
+        // Teacher PIN & Google Sheet Webhook URL
+        let teacherPin = "1234";
+        let googleScriptUrl = "";
+        let isAnalyticsUnlocked = false;
+
+        function openGoogleSheetSettings() {
+            document.getElementById('googleScriptUrlInput').value = googleScriptUrl;
+            document.getElementById('googleSheetModal').classList.remove('hidden');
+        }
+
+        function closeGoogleSheetSettings() {
+            document.getElementById('googleSheetModal').classList.add('hidden');
+        }
+
+        function saveGoogleScriptUrl() {
+            const url = document.getElementById('googleScriptUrlInput').value.trim();
+            googleScriptUrl = url;
+            alert("Google Sheet Webhook URL амжилттай хадгалагдлаа!");
+            closeGoogleSheetSettings();
+        }
+
+        function sendResultToGoogleSheet() {
+            const studentName = document.getElementById('studentNameInput').value.trim() || "Сурагч";
+            let correctCount = 0;
+            const tenseStats = {
+                "Present Simple": { total: 0, correct: 0 },
+                "Present Continuous": { total: 0, correct: 0 },
+                "Present Perfect": { total: 0, correct: 0 },
+                "Present Perfect Continuous": { total: 0, correct: 0 }
+            };
+
+            currentQuestions.forEach(q => {
+                const userAns = examUserAnswers[q.id] || practiceAnswers[q.id];
+                const cat = q.tense || "Present Simple";
+                if (!tenseStats[cat]) tenseStats[cat] = { total: 0, correct: 0 };
+                tenseStats[cat].total++;
+                if (userAns === q.correctAnswer) {
+                    correctCount++;
+                    tenseStats[cat].correct++;
+                }
+            });
+
+            const total = currentQuestions.length;
+            const scorePct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+            const payload = {
+                studentName: studentName,
+                total: total,
+                correctCount: correctCount,
+                scorePct: scorePct,
+                simple: `${tenseStats["Present Simple"].correct}/${tenseStats["Present Simple"].total}`,
+                continuous: `${tenseStats["Present Continuous"].correct}/${tenseStats["Present Continuous"].total}`,
+                perfect: `${tenseStats["Present Perfect"].correct}/${tenseStats["Present Perfect"].total}`,
+                perfcont: `${tenseStats["Present Perfect Continuous"].correct}/${tenseStats["Present Perfect Continuous"].total}`
+            };
+
+            const statusMsg = document.getElementById('googleSheetStatusMsg');
+            statusMsg.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+            statusMsg.classList.add('bg-brand-100', 'text-brand-800');
+            statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Google Sheet рүү илгээж байна...`;
+
+            if (googleScriptUrl) {
+                fetch(googleScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(() => {
+                    statusMsg.className = "my-4 p-3 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-emerald-100 text-emerald-800";
+                    statusMsg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> "${studentName}"-ийн дүн Google Sheet рүү амжилттай илгээгдлээ!`;
+                    playSound('correct');
+                }).catch(err => {
+                    statusMsg.className = "my-4 p-3 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-rose-100 text-rose-800";
+                    statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> Илгээхэд алдаа гарлаа: ${err.message}`;
+                });
+            } else {
+                // If Webhook URL not configured, automatically download CSV for Google Sheets
+                exportToGoogleSheetCSV();
+                statusMsg.className = "my-4 p-3 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-emerald-100 text-emerald-800";
+                statusMsg.innerHTML = `<i class="fa-solid fa-file-csv text-emerald-600 mr-1"></i> Google Sheet дээр нээх боломжтой CSV файл амжилттай татагдлаа! (Хэрэв шууд Google Sheet рүү хадгалах бол 'Google Sheet Холбох' дээр дарж URL-аа тохируулна уу).`;
+            }
+        }
+
+        function exportToGoogleSheetCSV() {
+            const studentName = document.getElementById('studentNameInput').value.trim() || "Сурагч";
+            let correctCount = 0;
+            const tenseStats = {
+                "Present Simple": { total: 0, correct: 0 },
+                "Present Continuous": { total: 0, correct: 0 },
+                "Present Perfect": { total: 0, correct: 0 },
+                "Present Perfect Continuous": { total: 0, correct: 0 }
+            };
+
+            currentQuestions.forEach(q => {
+                const userAns = examUserAnswers[q.id] || practiceAnswers[q.id];
+                const cat = q.tense || "Present Simple";
+                if (!tenseStats[cat]) tenseStats[cat] = { total: 0, correct: 0 };
+                tenseStats[cat].total++;
+                if (userAns === q.correctAnswer) {
+                    correctCount++;
+                    tenseStats[cat].correct++;
+                }
+            });
+
+            const total = currentQuestions.length;
+            const scorePct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+            let csvContent = "\uFEFF"; // UTF-8 BOM for Excel / Google Sheets Unicode support
+            csvContent += "Огноо,Сурагчийн Нэр,Амжилтын Хувь,Зөв Хариулт,Present Simple,Present Continuous,Present Perfect,Present Perfect Continuous\n";
+            csvContent += `"${new Date().toLocaleString()}","${studentName}","${scorePct}%","${correctCount}/${total}","${tenseStats["Present Simple"].correct}/${tenseStats["Present Simple"].total}","${tenseStats["Present Continuous"].correct}/${tenseStats["Present Continuous"].total}","${tenseStats["Present Perfect"].correct}/${tenseStats["Present Perfect"].total}","${tenseStats["Present Perfect Continuous"].correct}/${tenseStats["Present Perfect Continuous"].total}"\n`;
+
+            const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `GoogleSheet_Dungiiin_Tailan_${studentName.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            playSound('click');
+        }
+
+        function unlockAnalytics() {
+            const input = document.getElementById('teacherPinInput');
+            const errText = document.getElementById('pinErrorText');
+            if (input.value === teacherPin) {
+                isAnalyticsUnlocked = true;
+                errText.classList.add('hidden');
+                document.getElementById('analyticsLockScreen').classList.add('hidden');
+                document.getElementById('analyticsContent').classList.remove('hidden');
+                document.getElementById('analyticsLockIcon').className = "fa-solid fa-lock-open text-xs text-emerald-500 ml-1";
+                calculateAnalytics();
+                playSound('correct');
+            } else {
+                errText.classList.remove('hidden');
+                playSound('wrong');
+            }
+        }
+
+        function lockAnalytics() {
+            isAnalyticsUnlocked = false;
+            document.getElementById('teacherPinInput').value = '';
+            document.getElementById('analyticsLockScreen').classList.remove('hidden');
+            document.getElementById('analyticsContent').classList.add('hidden');
+            document.getElementById('analyticsLockIcon').className = "fa-solid fa-lock text-xs text-amber-500 ml-1";
+            playSound('click');
+        }
+
+        function openChangePinModal() {
+            document.getElementById('oldPinInput').value = '';
+            document.getElementById('newPinInput').value = '';
+            document.getElementById('changePinModal').classList.remove('hidden');
+        }
+
+        function closeChangePinModal() {
+            document.getElementById('changePinModal').classList.add('hidden');
+        }
+
+        function saveNewTeacherPin() {
+            const oldPin = document.getElementById('oldPinInput').value;
+            const newPin = document.getElementById('newPinInput').value;
+            if (oldPin !== teacherPin) {
+                alert("Одоогийн PIN код буруу байна!");
+                return;
+            }
+            if (!newPin || newPin.trim().length < 4) {
+                alert("Шинэ PIN код хамгийн багадаа 4 оронтой байх ёстой!");
+                return;
+            }
+            teacherPin = newPin.trim();
+            alert("Багшийн PIN код амжилттай шинэчлэгдлээ!");
+            closeChangePinModal();
+            playSound('correct');
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const synth = new Tone.Synth().toDestination();
+                if (type === 'correct') {
+                    synth.triggerAttackRelease("C5", "8n");
+                    setTimeout(() => synth.triggerAttackRelease("G5", "8n"), 100);
+                } else if (type === 'wrong') {
+                    synth.triggerAttackRelease("C3", "8n");
+                } else if (type === 'click') {
+                    synth.triggerAttackRelease("E4", "16n");
+                }
+            } catch (e) {
+                // Ignore audio context autoplay errors
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('audioIcon');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-base text-brand-600";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-base text-slate-400";
+            }
+        }
+
+        function startLessonTimer() {
+            clearInterval(lessonTimerInterval);
+            lessonTimerInterval = setInterval(() => {
+                if (!isTimerRunning) return;
+                if (lessonSecondsLeft > 0) {
+                    lessonSecondsLeft--;
+                    updateLessonTimerDisplay();
+                } else {
+                    clearInterval(lessonTimerInterval);
+                    alert("80 минутын хичээлийн цаг дууслаа!");
+                }
+            }, 1000);
+        }
+
+        function updateLessonTimerDisplay() {
+            const m = Math.floor(lessonSecondsLeft / 60);
+            const s = lessonSecondsLeft % 60;
+            const formatted = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('lessonTimerDisplay').textContent = formatted;
+        }
+
+        function toggleLessonTimer() {
+            isTimerRunning = !isTimerRunning;
+            const btn = document.getElementById('toggleTimerBtn');
+            if (isTimerRunning) {
+                btn.innerHTML = `<i id="timerIcon" class="fa-solid fa-pause text-xs mr-1"></i> Түр зогсоох`;
+            } else {
+                btn.innerHTML = `<i id="timerIcon" class="fa-solid fa-play text-xs mr-1"></i> Үргэлжлүүлэх`;
+            }
+        }
+
+        function switchTab(tabName) {
+            playSound('click');
+            // Hide all views
+            ['grammar', 'practice', 'exam', 'analytics'].forEach(view => {
+                document.getElementById(`view-${view}`).classList.add('hidden');
+                document.getElementById(`tab-${view}`)?.classList.remove('active');
+            });
+
+            // Show active view
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`)?.classList.add('active');
+
+            if (tabName === 'practice') {
+                renderPracticeCard();
+            } else if (tabName === 'exam') {
+                renderExamQuestions();
+            } else if (tabName === 'analytics') {
+                if (isAnalyticsUnlocked) {
+                    document.getElementById('analyticsLockScreen').classList.add('hidden');
+                    document.getElementById('analyticsContent').classList.remove('hidden');
+                    calculateAnalytics();
+                } else {
+                    document.getElementById('analyticsLockScreen').classList.remove('hidden');
+                    document.getElementById('analyticsContent').classList.add('hidden');
+                }
+            }
+        }
+
+        function renderPracticeCard() {
+            if (currentQuestions.length === 0) return;
+            const q = currentQuestions[currentPracticeIndex];
+
+            document.getElementById('practiceProgressText').textContent = `Асуулт ${currentPracticeIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('practiceQIndex').textContent = `#${q.id}`;
+            document.getElementById('practiceTenseBadge').textContent = q.tense || "Present Tense";
+            document.getElementById('practiceQuestionText').innerHTML = q.question.replace(/\n/g, '<br/>');
+
+            const grid = document.getElementById('practiceOptionsGrid');
+            grid.innerHTML = '';
+            grid.className = "grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2";
+
+            const selectedAnswer = practiceAnswers[q.id];
+            const hasAnswered = selectedAnswer !== undefined;
+
+            q.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = "p-3 sm:p-3.5 rounded-xl text-left border font-semibold text-xs sm:text-sm transition flex items-center justify-between min-h-[46px] ";
+
+                if (!hasAnswered) {
+                    btn.className += "border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 text-slate-700 active:scale-[0.99]";
+                    btn.onclick = () => handlePracticeSelect(q.id, opt);
+                } else {
+                    if (opt === q.correctAnswer) {
+                        btn.className += "border-emerald-500 bg-emerald-50 text-emerald-800 font-bold";
+                        btn.innerHTML = `<span class="pr-2">${opt}</span> <i class="fa-solid fa-circle-check text-emerald-600 shrink-0"></i>`;
+                    } else if (opt === selectedAnswer) {
+                        btn.className += "border-rose-500 bg-rose-50 text-rose-800";
+                        btn.innerHTML = `<span class="pr-2">${opt}</span> <i class="fa-solid fa-circle-xmark text-rose-600 shrink-0"></i>`;
+                    } else {
+                        btn.className += "border-slate-200 bg-slate-50 text-slate-400 opacity-60";
+                    }
+                }
+
+                if (!hasAnswered) {
+                    btn.textContent = opt;
+                }
+                grid.appendChild(btn);
+            });
+
+            // Handle Explanation box
+            const expBox = document.getElementById('practiceExplanationBox');
+            if (hasAnswered) {
+                expBox.classList.remove('hidden');
+                document.getElementById('explanationText').textContent = q.explanation || "Тайлбар оруулаагүй байна.";
+                if (selectedAnswer === q.correctAnswer) {
+                    document.getElementById('explanationTitle').textContent = "Зөв хариуллаа! Дүрмийн санамж:";
+                    document.getElementById('explanationTitle').className = "font-bold text-sm text-emerald-700";
+                } else {
+                    document.getElementById('explanationTitle').textContent = "Буруу хариуллаа. Анхаарах дүрэм:";
+                    document.getElementById('explanationTitle').className = "font-bold text-sm text-rose-700";
+                }
+            } else {
+                expBox.classList.add('hidden');
+            }
+        }
+
+        function handlePracticeSelect(qid, option) {
+            practiceAnswers[qid] = option;
+            const q = currentQuestions.find(item => item.id === qid);
+            if (option === q.correctAnswer) {
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+            renderPracticeCard();
+        }
+
+        function nextPracticeQuestion() {
+            playSound('click');
+            if (currentPracticeIndex < currentQuestions.length - 1) {
+                currentPracticeIndex++;
+                renderPracticeCard();
+            } else {
+                alert("Интерактив дасгалын бүх асуулт дууслаа! Одоо ЭЕШ симуляци шалгалт өгөх эсвэл анализаа харна уу.");
+                switchTab('analytics');
+            }
+        }
+
+        function resetPractice() {
+            playSound('click');
+            currentPracticeIndex = 0;
+            practiceAnswers = {};
+            renderPracticeCard();
+        }
+
+        function renderExamQuestions() {
+            const container = document.getElementById('examQuestionsContainer');
+            container.innerHTML = '';
+
+            currentQuestions.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-3";
+                
+                const userChoice = examUserAnswers[q.id];
+
+                let optionsHtml = '';
+                q.options.forEach(opt => {
+                    const isChecked = userChoice === opt ? 'checked' : '';
+                    optionsHtml += `
+                        <label class="flex items-center p-2.5 sm:p-3 rounded-lg border border-slate-100 hover:bg-slate-50 cursor-pointer text-xs sm:text-sm text-slate-700 space-x-3 active:bg-slate-100">
+                            <input type="radio" name="exam_q_${q.id}" value="${opt}" ${isChecked} onchange="handleExamSelect(${q.id}, '${opt}')" class="w-4 h-4 text-brand-600 focus:ring-brand-500 shrink-0">
+                            <span class="leading-tight">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md">Асуулт ${idx + 1}</span>
+                        <span class="text-[11px] font-semibold text-slate-400">${q.tense}</span>
+                    </div>
+                    <p class="font-bold text-slate-800 text-xs sm:text-base leading-snug">${q.question.replace(/\n/g, '<br/>')}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleExamSelect(qid, opt) {
+            examUserAnswers[qid] = opt;
+            playSound('click');
+        }
+
+        function submitExam() {
+            playSound('correct');
+            const answeredCount = Object.keys(examUserAnswers).length;
+            if (answeredCount < currentQuestions.length) {
+                if (!confirm(`Та ${currentQuestions.length} асуултаас ${answeredCount}-д нь л хариулсан байна. Шалгалтыг шууд дуусгах уу?`)) {
+                    return;
+                }
+            }
+            switchTab('analytics');
+        }
+
+        function calculateAnalytics() {
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            const tenseStats = {
+                "Present Simple": { total: 0, correct: 0 },
+                "Present Continuous": { total: 0, correct: 0 },
+                "Present Perfect": { total: 0, correct: 0 },
+                "Present Perfect Continuous": { total: 0, correct: 0 }
+            };
+
+            const mistakesList = [];
+
+            currentQuestions.forEach(q => {
+                const userAns = examUserAnswers[q.id] || practiceAnswers[q.id];
+                const category = q.tense || "Present Simple";
+
+                if (!tenseStats[category]) {
+                    tenseStats[category] = { total: 0, correct: 0 };
+                }
+
+                tenseStats[category].total++;
+
+                if (userAns === q.correctAnswer) {
+                    correctCount++;
+                    tenseStats[category].correct++;
+                } else {
+                    wrongCount++;
+                    mistakesList.push({
+                        q: q,
+                        userAns: userAns || "[Хариулаагүй]"
+                    });
+                }
+            });
+
+            const total = currentQuestions.length;
+            const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statCorrect').textContent = correctCount;
+            document.getElementById('statWrong').textContent = wrongCount;
+            document.getElementById('statScorePct').textContent = `${pct}%`;
+
+            // Render bar progress
+            updateTenseBar('simple', tenseStats["Present Simple"]);
+            updateTenseBar('continuous', tenseStats["Present Continuous"]);
+            updateTenseBar('perfect', tenseStats["Present Perfect"]);
+            updateTenseBar('perfcont', tenseStats["Present Perfect Continuous"]);
+
+            // Render mistakes review list
+            const mistakesContainer = document.getElementById('mistakesReviewList');
+            if (mistakesList.length === 0) {
+                mistakesContainer.innerHTML = `<div class="p-4 rounded-xl bg-emerald-50 text-emerald-800 text-xs sm:text-sm font-semibold flex items-center space-x-2"><i class="fa-solid fa-circle-check text-emerald-600"></i><span>Баяр хүргэе! Ямар ч алдаа байхгүй байна.</span></div>`;
+            } else {
+                mistakesContainer.innerHTML = '';
+                mistakesList.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = "bg-rose-50/50 border border-rose-100 rounded-xl p-4 space-y-2 text-xs sm:text-sm";
+                    el.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-rose-800">Асуулт #${item.q.id} (${item.q.tense})</span>
+                            <span class="text-rose-600 bg-rose-100 px-2 py-0.5 rounded text-[11px] font-semibold">Алдаатай</span>
+                        </div>
+                        <p class="font-bold text-slate-800">${item.q.question}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+                            <div class="bg-white p-2 rounded border border-rose-200 text-rose-700"><strong>Таны хариулт:</strong> ${item.userAns}</div>
+                            <div class="bg-white p-2 rounded border border-emerald-200 text-emerald-700"><strong>Зөв хариулт:</strong> ${item.q.correctAnswer}</div>
+                        </div>
+                        <p class="text-slate-600 text-xs italic bg-white/60 p-2 rounded border border-slate-200/60 mt-1">💡 <strong>Тайлбар:</strong> ${item.q.explanation}</p>
+                    `;
+                    mistakesContainer.appendChild(el);
+                });
+            }
+        }
+
+        function updateTenseBar(key, data) {
+            const txt = document.getElementById(`score-${key}-text`);
+            const bar = document.getElementById(`bar-${key}`);
+            if (!data || data.total === 0) {
+                txt.textContent = "0 / 0 (0%)";
+                bar.style.width = "0%";
+                return;
+            }
+            const pct = Math.round((data.correct / data.total) * 100);
+            txt.textContent = `${data.correct} / ${data.total} (${pct}%)`;
+            bar.style.width = `${pct}%`;
+        }
+
+        function exportResultReport() {
+            playSound('click');
+            window.print();
+        }
+
+        window.onload = function() {
+            startLessonTimer();
+            renderPracticeCard();
+        };
+    </script>
+</body>
+</html>
